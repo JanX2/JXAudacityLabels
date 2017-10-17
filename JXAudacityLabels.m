@@ -44,7 +44,7 @@ static const CMTimeScale MicrosecondTimescaleJX = 1000000;
 			NSLog(@"Parser warning in Audacity text labels: no line break found!");
 			linebreakString = @"\n";
 		}
-		[scanner setScanLocation:0];
+		scanner.scanLocation = 0;
 	}
 	
 	NSString *separator = @"\t";
@@ -56,7 +56,7 @@ static const CMTimeScale MicrosecondTimescaleJX = 1000000;
 	
 	size_t lineNumber = 1;
 	
-	while (![scanner isAtEnd]) {
+	while (!scanner.atEnd) {
 		NSString *labelString;
 		
 		double startInSeconds;
@@ -75,7 +75,7 @@ static const CMTimeScale MicrosecondTimescaleJX = 1000000;
 				   &&
 				   
 				   // End of label
-				   (SCAN_LINEBREAK() || [scanner isAtEnd])
+				   (SCAN_LINEBREAK() || scanner.atEnd)
 				   );
 		
 		if (ok) {
@@ -91,7 +91,7 @@ static const CMTimeScale MicrosecondTimescaleJX = 1000000;
 			if (outError != NULL) {
 				const NSUInteger contextLength = 20;
 				NSUInteger strLength = string.length;
-				NSUInteger errorLocation = [scanner scanLocation];
+				NSUInteger errorLocation = scanner.scanLocation;
 				
 				NSRange beforeRange, afterRange;
 				
@@ -105,9 +105,7 @@ static const CMTimeScale MicrosecondTimescaleJX = 1000000;
 				
 				NSString *errorDescription = [NSString stringWithFormat:NSLocalizedString(@"The Audacity text labels could not be parsed: error in line %d:\n%@<HERE>%@", @"Cannot parse Audacity text labels file"),
 											  lineNumber, beforeError, afterError];
-				NSDictionary *errorDetail = [NSDictionary dictionaryWithObjectsAndKeys:
-											 errorDescription, NSLocalizedDescriptionKey,
-											 nil];
+				NSDictionary *errorDetail = @{NSLocalizedDescriptionKey: errorDescription};
 				*outError = [NSError errorWithDomain:JXAudacityLabelsErrorDomain
 												code:JXAudacityLabelsCouldNotParseError
 											userInfo:errorDetail];
