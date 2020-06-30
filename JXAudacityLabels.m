@@ -103,7 +103,7 @@ static const CMTimeScale MicrosecondTimescaleJX = 1000000;
 				afterRange.location = errorLocation;
 				NSString *afterError = [string substringWithRange:afterRange];
 				
-				NSString *errorDescription = [NSString stringWithFormat:NSLocalizedString(@"The Audacity text labels could not be parsed: error in line %d:\n%@<HERE>%@", @"Cannot parse Audacity text labels file"),
+				NSString *errorDescription = [NSString stringWithFormat:NSLocalizedString(@"The Audacity text labels could not be parsed: error in line %zu:\n%@<HERE>%@", @"Cannot parse Audacity text labels file"),
 											  lineNumber, beforeError, afterError];
 				NSDictionary *errorDetail = @{NSLocalizedDescriptionKey: errorDescription};
 				*outError = [NSError errorWithDomain:JXAudacityLabelsErrorDomain
